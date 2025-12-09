@@ -9,8 +9,10 @@ import com.example.E_Commerce.Backend.Project.repository.ProductRepository;
 import com.example.E_Commerce.Backend.Project.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -37,25 +39,56 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProductById(Long id) {
-        return null;
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("product not found"));
+        return mapToDto(product);
     }
+
+    /* WithOut Stream we should use this , but here Stream done this to us
+    List<Product> products = productRepository.findAll();
+    List<ProductDto> dtos = new ArrayList<>();
+
+    for(Product p : products) {
+        dtos.add(mapToDto(p));
+    }
+
+    return dtos; */
 
     @Override
     public List<ProductDto> getAllProducts() {
-        return List.of();
+        return productRepository.findAll()
+                .stream()
+                .map(this::mapToDto) // product -> this.mapToDto(product)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ProductDto updateProduct(Long id, CreateProductRequest request) {
-        return null;
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found "));
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() ->new RuntimeException("Category Not found"));
+
+        product.setName(request.getName());
+        product.setName(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setCategory(category);
+
+        Product updated = productRepository.save(product);
+
+        return mapToDto(updated);
     }
 
     @Override
     public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Product Not Found"));
 
+        productRepository.deleteById(id);
     }
 
-
+    // ENTITY -> DTO
     private ProductDto mapToDto(Product product){
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
