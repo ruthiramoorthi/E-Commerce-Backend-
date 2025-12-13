@@ -25,4 +25,6 @@ public class Cart {
     //“The CartItem table has the foreign key for this relationship.
     //Look at the field named cart inside the CartItem class.”
     private List<Cart_Item> items;
+
+    private double total_amount = 0.0;
 }

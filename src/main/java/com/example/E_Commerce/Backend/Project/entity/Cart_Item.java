@@ -23,4 +23,6 @@ public class Cart_Item {
     private Product product;
 
     private int quantity;
+
+    private double price; // price of qty * product price
 }
