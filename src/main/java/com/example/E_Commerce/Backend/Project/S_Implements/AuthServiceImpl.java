@@ -2,7 +2,10 @@ package com.example.E_Commerce.Backend.Project.S_Implements;
 
 import com.example.E_Commerce.Backend.Project.dto.Auth.LoginRequest;
 import com.example.E_Commerce.Backend.Project.dto.Auth.RegisterRequest;
+import com.example.E_Commerce.Backend.Project.entity.Cart;
 import com.example.E_Commerce.Backend.Project.entity.User;
+import com.example.E_Commerce.Backend.Project.repository.CartRepository;
+import com.example.E_Commerce.Backend.Project.repository.Cart_ItemRepository;
 import com.example.E_Commerce.Backend.Project.repository.UserRepository;
 import com.example.E_Commerce.Backend.Project.security.AuthResponse;
 import com.example.E_Commerce.Backend.Project.security.JwtService;
@@ -21,6 +24,9 @@ public class AuthServiceImpl implements AuthenticationService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
+    CartRepository cartRepository;
+
+    @Autowired
     JwtService jwtService;
 
     @Override
@@ -31,6 +37,11 @@ public class AuthServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
         userRepository.save(user);
+
+        // create empty cart for user
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
 
         String token = jwtService.generateToken(user.getEmail());
 
