@@ -68,10 +68,10 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found "));
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() ->new RuntimeException("Category Not found"));
+                .orElseThrow(() -> new RuntimeException("Category Not found"));
 
         product.setName(request.getName());
-        product.setName(request.getDescription());
+        product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setCategory(category);
 
