@@ -1,5 +1,6 @@
 package com.example.E_Commerce.Backend.Project.entity;
 
+import com.example.E_Commerce.Backend.Project.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,8 +27,8 @@ public class Order {
 
     private double amount;
 
-
-    private String status; //PENDING,SHIPPED,DELIVERED
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status; //PENDING,SHIPPED,DELIVERED
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     private List<Order_Item> items;
